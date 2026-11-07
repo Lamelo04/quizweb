@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fc">
+  <meta name="description" content="Un petit quiz de culture web pour tester vos connaissances en HTML, CSS et JavaScript.">
+  <title>Quiz Web — À vous de jouer !</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#accueil" aria-label="Quiz Web, accueil">
+        <span class="brand-mark" aria-hidden="true">q.</span>
+        <span>quiz<span class="brand-light">web</span></span>
+      </a>
+    </header>
+
+    <section class="screen welcome-screen" id="accueil" aria-labelledby="welcome-title">
+      <div class="welcome-copy">
+        <p class="eyebrow"><span class="sparkle" aria-hidden="true">✳</span> LE MINI QUIZ DU JOUR</p>
+        <h1 id="welcome-title">Le web, vous<br>connaissez <span class="title-accent">vraiment&nbsp;?</span></h1>
+        <p class="welcome-description">Quelques questions, un peu de réflexion et beaucoup de fun. Montrez-nous ce que vous avez dans le navigateur&nbsp;!</p>
+        <div class="quiz-settings" aria-label="Personnaliser le quiz">
+          <label for="topic-input">Sujet du quiz</label>
+          <input id="topic-input" type="text" maxlength="80" value="Culture web" placeholder="Ex. les animaux, le cinéma…">
+          <div class="settings-row">
+            <div><label for="question-count">Questions</label><select id="question-count"><option value="5" selected>5</option><option value="3">3</option><option value="8">8</option><option value="10">10</option></select></div>
+            <div><label for="question-type">Type</label><select id="question-type"><option value="mixed" selected>Mixte</option><option value="multiple_choice">QCM</option><option value="true_false">Vrai / Faux</option></select></div>
+            <div><label for="difficulty">Niveau</label><select id="difficulty"><option value="easy">Facile</option><option value="medium" selected>Moyen</option><option value="hard">Difficile</option></select></div>
+          </div>
+          <button class="button button-primary start-button" id="generate-button" type="button">Générer mon quiz <span aria-hidden="true">✦</span></button>
+          <button class="button button-secondary demo-button" id="demo-button" type="button">Jouer au quiz démo</button>
+          <p class="setup-message hidden" id="setup-message" role="status" aria-live="polite"></p>
+          <p class="no-pressure">20 secondes par question · Un nouveau quiz à chaque génération</p>
+        </div>
+        <div class="high-scores" aria-labelledby="high-scores-title">
+          <h2 id="high-scores-title">Meilleurs scores</h2>
+          <ol id="high-scores-list"><li>Vos résultats apparaîtront ici.</li></ol>
+        </div>
+      </div>
+
+      <div class="welcome-art" aria-hidden="true">
+        <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+        <div class="art-spark art-spark-one">✳</div><div class="art-spark art-spark-two">✦</div>
+        <div class="browser-card">
+          <div class="browser-bar"><span></span><span></span><span></span><i></i></div>
+          <div class="code-lines"><div class="code-line line-short"><b>&lt;h1&gt;</b><i>Bonjour le web !</i><b>&lt;/h1&gt;</b></div><div class="code-line"><b class="purple">.curiosité</b> <em>{</em></div><div class="code-line indent"><b class="pink">display</b>: <i>block</i>;</div><div class="code-line indent"><b class="pink">fun</b>: <i>100%</i>;</div><div class="code-line"><em>}</em></div><div class="code-cursor"></div></div>
+          <div class="floating-badge badge-html"><span>&lt;/&gt;</span> HTML</div>
+          <div class="floating-badge badge-js"><span>✳</span> JS</div>
+        </div>
+        <div class="art-caption">curiosity.exe <span>● en cours</span></div>
+      </div>
+      <div class="page-decoration decoration-one" aria-hidden="true">✳</div>
+      <div class="page-decoration decoration-two" aria-hidden="true">✦</div>
+    </section>
+
+    <section class="screen quiz-screen hidden" id="quiz" aria-labelledby="question-title">
+      <div class="quiz-heading">
+        <p class="eyebrow"><span class="sparkle" aria-hidden="true">✳</span> À VOUS DE JOUER</p>
+        <div class="quiz-counter"><span id="question-number">01</span><span class="counter-slash">/</span><span id="question-total">05</span></div>
+      </div>
+      <div class="progress-track" role="progressbar" aria-label="Progression du quiz" aria-valuemin="0" aria-valuemax="5" aria-valuenow="1"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="timer-row"><span id="question-kind" class="question-kind">QCM</span><div class="timer-wrap"><span class="timer-label">Temps restant</span><strong id="timer-countdown" aria-live="off">20 s</strong></div></div>
+      <div class="timer-track" id="timer-track" role="progressbar" aria-label="Temps restant pour répondre" aria-valuemin="0" aria-valuemax="20" aria-valuenow="20"><div class="timer-fill" id="timer-fill"></div></div>
+      <div class="question-card" id="question-card" aria-live="polite">
+        <span class="question-category" id="question-category">HTML</span>
+        <h1 id="question-title" tabindex="-1">Chargement de la question…</h1>
+        <p class="answer-hint">Choisissez une réponse</p>
+        <div class="answers" id="answers" role="group" aria-label="Choix de réponse"></div>
+        <div class="feedback hidden" id="feedback" role="status" aria-live="polite"></div>
+        <div class="question-footer"><span><span class="key-icon" aria-hidden="true">↵</span> Sélectionnez votre réponse</span><button class="button button-primary next-button" id="next-button" type="button" disabled>Suivant <span aria-hidden="true">→</span></button></div>
+      </div>
+      <p class="quiz-footnote">Un quiz fait avec <span role="img" aria-label="amour">♥</span> et un peu de café.</p>
+    </section>
+
+    <section class="screen result-screen hidden" id="result" aria-labelledby="result-title">
+      <div class="result-confetti" aria-hidden="true"><span>✦</span><span>✳</span><span>✦</span><span>✳</span><span>✦</span></div>
+      <div class="result-card">
+        <div class="result-icon" id="result-icon" aria-hidden="true">✦</div>
+        <p class="eyebrow">QUIZ TERMINÉ</p>
+        <h1 id="result-title">Bien joué !</h1>
+        <p class="result-message" id="result-message">Vous avez terminé le quiz.</p>
+        <div class="score-display"><strong id="score-value">0</strong><span>pts</span></div>
+        <p class="score-caption" id="score-caption">0 / 5 bonnes réponses</p>
+        <div class="result-progress" aria-hidden="true"><div class="result-progress-fill" id="result-progress-fill"></div></div>
+        <div class="result-actions"><button class="button button-primary restart-button" id="restart-button" type="button">Rejouer <span aria-hidden="true">↻</span></button><button class="button button-secondary home-button" id="home-button" type="button">Nouveau quiz</button></div>
+        <div class="result-high-scores"><h2>Meilleurs scores</h2><ol id="result-high-scores-list"></ol></div>
+      </div>
+      <p class="quiz-footnote">Merci d'avoir joué, à bientôt sur le web ! <span aria-hidden="true">✿</span></p>
+    </section>
+    <footer class="site-footer"><span>© 2026 quizweb</span><span>Fait pour les esprits curieux <span aria-hidden="true">✳</span></span></footer>
+  </main>
+</body>
+</html>
+
